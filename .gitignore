@@ -1,0 +1,26 @@
+# Helm ignore
+*.tgz
+
+# Hidden directories
+**/.DS_Store
+**/.idea
+
+# Temp files
+*.tmp
+*.bak
+*.swp
+*.save
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Logs
+logs/
+*.log
+
+# OS generated
+*.pid
+*.seed
+*.pid.lock
