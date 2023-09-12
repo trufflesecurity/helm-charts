@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  repository: us-docker.pkg.dev/thog-artifacts/public/scanner
+  tag: latest
+
+config:
+  secretName: config
+
+probe:
+  initialDelaySeconds: 3
+  periodSeconds: 3
+
+nameOverride: ""
+fullnameOverride: ""

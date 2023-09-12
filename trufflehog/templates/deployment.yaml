@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "trufflehog.fullname" . }}
+  labels:
+    {{- include "trufflehog.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "trufflehog.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "trufflehog.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: config-secret-volume
+          secret:
+            secretName: {{ .Values.config.secretName }}
+      containers:
+        - name: trufflehog
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          terminationMessagePolicy: FallbackToLogsOnError
+          command: ["/usr/local/bin/scanner", "scan", "--config=/secret/config.yaml", "--port=8080"]
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probe.periodSeconds }}
+          volumeMounts:
+            - name: config-secret-volume
+              mountPath: /secret/
