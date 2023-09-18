@@ -1,6 +1,3 @@
-# Helm ignore
-*.tgz
-
 # Hidden directories
 **/.DS_Store
 **/.idea
