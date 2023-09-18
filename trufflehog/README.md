@@ -23,7 +23,7 @@ kubectl create secret generic config --namespace trufflehog --from-file=config.y
 
 Once the prerequisites are satisfied, you can deploy Trufflehog using the following command:
 ```bash
-helm repo add trufflescurity https://trufflescurity.github.io/helm-charts
+helm repo add trufflesecurity https://trufflesecurity.github.io/helm-charts
 helm install trufflehog trufflesecurity/trufflehog --namespace trufflehog
 ```
 
