@@ -41,12 +41,49 @@ The `values.yaml` file provides configuration options for the Trufflehog Helm ch
 
 To adjust these configurations:
 
-1. Modify the `values.yaml` file directly, or
-2. Provide overrides during the Helm install command.
+## Configuration
 
-Example:
-```bash
-helm install trufflehog trufflesecurity/trufflehog --namespace trufflehog --set replicaCount=2
-```
+### 1. Before Installing:
 
-This command overrides the `replicaCount` value, setting it to 2 instead of the default.
+Modify the `values.yaml` file directly in the chart directory to adjust the default values.
+
+### 2. During Installation:
+
+- **Using `--set` Flag**:
+
+  ```bash
+  helm install trufflehog trufflesecurity/trufflehog --namespace trufflehog --set replicaCount=2
+  ```
+
+  This command overrides the `replicaCount` value, setting it to 2 instead of the default.
+
+- **Using a Custom `values.yaml`**:
+
+  Modify your local copy of `values.yaml`. Then:
+
+  ```bash
+  helm install trufflehog trufflesecurity/trufflehog --namespace trufflehog -f /path/to/your/values.yaml
+  ```
+
+### 3. After Installation:
+
+If you've already installed the Helm release and want to modify the values:
+
+- **Using `--set` Flag**:
+
+  ```bash
+  helm upgrade trufflehog trufflesecurity/trufflehog --namespace trufflehog --set replicaCount=3
+  ```
+
+  This command upgrades the existing release with the new value.
+
+- **Using a Custom `values.yaml`**:
+
+  Modify your local copy of `values.yaml` as needed. Then:
+
+  ```bash
+  helm upgrade trufflehog trufflesecurity/trufflehog --namespace trufflehog -f /path/to/your/values.yaml
+  ```
+
+  This command upgrades the existing release using the modified `values.yaml` file.
+
