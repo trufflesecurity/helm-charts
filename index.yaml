@@ -2,11 +2,11 @@ apiVersion: v1
 entries:
   trufflehog:
   - apiVersion: v2
-    created: "2023-09-18T09:08:00.575826-07:00"
+    created: "2023-09-18T10:08:34.60601-07:00"
     description: A Helm chart for trufflehog secrets scanning
-    digest: ef6023985ef6d494093cf19077f70d09518b073271facfdec49c93790f3b4426
+    digest: f0b4b1896cf085bcd096bff5b15d6abc2ca482fd184e4ddc1221265b9eeadb34
     name: trufflehog
     urls:
     - https://trufflesecurity.github.io/helm-charts/trufflehog-0.1.0.tgz
     version: 0.1.0
-generated: "2023-09-18T09:08:00.575189-07:00"
+generated: "2023-09-18T10:08:34.605726-07:00"
