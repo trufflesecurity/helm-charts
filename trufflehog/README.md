@@ -1,4 +1,4 @@
-# Trufflehog Helm Chart
+# TruffleHog Enterprise Helm Chart
 
 Description of what the chart deploys and its purpose.
 
@@ -15,13 +15,15 @@ kubectl create namespace trufflehog
 ### Create the Configuration Secret:
 
 Ensure you have the config.yaml file prepared with the appropriate configuration. Then, create the secret in the trufflehog namespace:
+
 ```bash
-kubectl create secret generic config --namespace trufflehog --from-file=config.yaml=config.yaml
+kubectl create secret generic config --namespace trufflehog --from-file=config.yaml=/path/to/config.yaml
 ```
 
 ### Installing the Chart:
 
 Once the prerequisites are satisfied, you can deploy Trufflehog using the following command:
+
 ```bash
 helm repo add trufflesecurity https://trufflesecurity.github.io/helm-charts
 helm install trufflehog trufflesecurity/trufflehog --namespace trufflehog
@@ -29,17 +31,7 @@ helm install trufflehog trufflesecurity/trufflehog --namespace trufflehog
 
 ### Configuration
 
-The `values.yaml` file provides configuration options for the Trufflehog Helm chart. This allows you to customize the deployment according to your environment and requirements.
-
-#### Key Configurations:
-
-- **replicaCount**: Sets the number of pod replicas.
-- **image**: Defines the Docker image repository and tag.
-- **config**: Configures the Kubernetes secret that provides the application's configuration data.
-- **probe**: Specifies the health probe settings for the pod, including initial delay and check frequency.
-- **nameOverride** and **fullnameOverride**: Allow for overriding the default naming of the deployment.
-
-To adjust these configurations:
+The [`values.yaml`](values.yaml) file provides configuration options for the Trufflehog Helm chart. This allows you to customize the deployment according to your environment and requirements.
 
 ## Configuration
 
@@ -86,4 +78,3 @@ If you've already installed the Helm release and want to modify the values:
   ```
 
   This command upgrades the existing release using the modified `values.yaml` file.
-
