@@ -1,9 +1,33 @@
+# Sets the number of pod replicas.
 replicaCount: 1
 
 image:
   repository: us-docker.pkg.dev/thog-artifacts/public/scanner
   tag: latest
 
+# The resources requests and limits for the TruffleHog Enterprise container.
+resources:
+  requests:
+    memory: "16Gi"
+    cpu: "4000m"
+    ephemeralStorage: "10Gi"
+  limits:
+    enabled: true
+    memory: "48Gi"
+    cpu: "12000m"
+
+# A VerticalPodAutoscaler will adjust resource requests based on observed CPU and memory usage.
+vpa:
+  enabled: true
+  minAllowed:
+    cpu: "4000m"
+    memory: "16Gi"
+  maxAllowed:
+    enabled: true
+    memory: "48Gi"
+    cpu: "12000m"
+
+# Configures the Kubernetes secret that provides the application's configuration data.
 config:
   secretName: config
 
@@ -13,3 +37,8 @@ probe:
 
 nameOverride: ""
 fullnameOverride: ""
+
+priorityClass:
+  create: true
+  name: ""                # Existing priority class to use if create is false
+  value: 1000             # Priority value, only used if create is true

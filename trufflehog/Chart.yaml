@@ -1,4 +1,4 @@
 apiVersion: v2
 name: trufflehog
-description: A Helm chart for trufflehog secrets scanning
-version: 0.1.0
+description: A Helm chart for TruffleHog Enterprise
+version: 0.1.1

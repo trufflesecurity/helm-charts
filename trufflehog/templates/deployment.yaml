@@ -16,6 +16,13 @@ spec:
         app.kubernetes.io/name: {{ include "trufflehog.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{- if .Values.priorityClass.create }}
+      priorityClassName: trufflehog-enterprise
+      {{- else if .Values.priorityClass.name }}
+      priorityClassName: {{ .Values.priorityClass.name }}
+      {{- else }}
+      # no priority class, leave it up to the system
+      {{- end }}
       volumes:
         - name: config-secret-volume
           secret:
@@ -34,3 +41,20 @@ spec:
           volumeMounts:
             - name: config-secret-volume
               mountPath: /secret/
+          resources:
+            requests:
+              memory: "{{ .Values.resources.requests.memory }}"
+              cpu: "{{ .Values.resources.requests.cpu }}"
+              ephemeral-storage: "{{ .Values.resources.requests.ephemeralStorage }}"
+            {{- if .Values.resources.limits.enabled }}
+            limits:
+              {{- if .Values.resources.limits.memory }}
+              memory: "{{ .Values.resources.limits.memory }}"
+              {{- end }}
+              {{- if .Values.resources.limits.cpu }}
+              cpu: "{{ .Values.resources.limits.cpu }}"
+              {{- end }}
+              {{- if .Values.resources.limits.ephemeralStorage }}
+              ephemeral-storage: "{{ .Values.resources.limits.ephemeralStorage }}"
+              {{- end }}
+            {{- end }}

@@ -1,0 +1,28 @@
+{{- if .Values.vpa.enabled }}
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ include "trufflehog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "trufflehog.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind:       "Deployment"
+    name:       {{ include "trufflehog.fullname" . }}
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: trufflehog
+        minAllowed:
+          cpu: {{ .Values.vpa.minAllowed.cpu }}
+          memory: {{ .Values.vpa.minAllowed.memory }}
+        {{- if .Values.vpa.maxAllowed.enabled }}
+        maxAllowed:
+          cpu: {{ .Values.vpa.maxAllowed.cpu }}
+          memory: {{ .Values.vpa.maxAllowed.memory }}
+        {{- end }}
+{{- end }}
