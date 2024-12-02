@@ -25,21 +25,10 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.securityContext.pod | nindent 8 }}
-      initContainers:
-        - name: copy-binary
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          command: ["cp", "/usr/local/bin/scanner", "/binary/"]
-          volumeMounts:
-            - name: binary-dir
-              mountPath: /binary
-          securityContext:
-            {{- toYaml .Values.securityContext.container | nindent 12 }}
       volumes:
         - name: config-secret-volume
           secret:
             secretName: {{ .Values.config.secretName }}
-        - name: binary-dir
-          emptyDir: {}
       containers:
         - name: trufflehog
           securityContext:
@@ -69,8 +58,6 @@ spec:
           volumeMounts:
             - name: config-secret-volume
               mountPath: /secret/
-            - name: binary-dir
-              mountPath: /usr/local/bin
           resources:
             requests:
               memory: "{{ .Values.resources.requests.memory }}"
