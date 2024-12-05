@@ -15,6 +15,7 @@ resources:
     enabled: true
     memory: "48Gi"
     cpu: "12000m"
+    ephemeralStorage: "30Gi"
 
 # A VerticalPodAutoscaler will adjust resource requests based on observed CPU and memory usage.
 vpa:
@@ -31,6 +32,14 @@ vpa:
 config:
   secretName: config
 
+# Configures the CLI options for the scanner.
+cli:
+  debug: false
+  quiet: false
+  trace: false
+  json: false
+
+
 probe:
   initialDelaySeconds: 3
   periodSeconds: 3
@@ -42,3 +51,19 @@ priorityClass:
   create: true
   name: ""                # Existing priority class to use if create is false
   value: 1000             # Priority value, only used if create is true
+
+securityContext:
+  # Pod-level security context
+  pod:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  # Container-level security context
+  container:
+    runAsNonRoot: true
+    runAsUser: 1000
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL

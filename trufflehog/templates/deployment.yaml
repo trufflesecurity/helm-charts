@@ -23,15 +23,32 @@ spec:
       {{- else }}
       # no priority class, leave it up to the system
       {{- end }}
+      securityContext:
+        {{- toYaml .Values.securityContext.pod | nindent 8 }}
       volumes:
         - name: config-secret-volume
           secret:
             secretName: {{ .Values.config.secretName }}
       containers:
         - name: trufflehog
+          securityContext:
+            {{- toYaml .Values.securityContext.container | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           terminationMessagePolicy: FallbackToLogsOnError
           command: ["/usr/local/bin/scanner", "scan", "--config=/secret/config.yaml", "--port=8080"]
+          args:
+            {{- if .Values.cli.debug }}
+            - "--debug"
+            {{- end }}
+            {{- if .Values.cli.quiet }}
+            - "--quiet"
+            {{- end }}
+            {{- if .Values.cli.trace }}
+            - "--trace"
+            {{- end }}
+            {{- if .Values.cli.json }}
+            - "--json"
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /healthz
