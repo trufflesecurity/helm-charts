@@ -34,6 +34,7 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext.container | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
           terminationMessagePolicy: FallbackToLogsOnError
           command: ["/usr/local/bin/scanner", "scan", "--config=/secret/config.yaml", "--port=8080"]
           args:
