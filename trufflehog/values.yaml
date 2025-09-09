@@ -48,6 +48,29 @@ probe:
 nameOverride: ""
 fullnameOverride: ""
 
+# Common labels to add to all resources
+commonLabels: {}
+  # environment: production
+  # team: security
+
+# Common annotations to add to all resources
+commonAnnotations: {}
+  # prometheus.io/scrape: "true"
+  # prometheus.io/port: "8080"
+
+# Additional labels to add to pods
+podLabels: {}
+  # security-scan: enabled
+  # pod-type: scanner
+
+# Additional annotations to add to pods
+podAnnotations: {}
+  # prometheus.io/scrape: "true"
+  # prometheus.io/port: "8080"
+  # prometheus.io/path: "/metrics"
+  # vault.hashicorp.com/agent-inject: "true"
+  # vault.hashicorp.com/role: "trufflehog"
+
 priorityClass:
   create: true
   name: ""                # Existing priority class to use if create is false

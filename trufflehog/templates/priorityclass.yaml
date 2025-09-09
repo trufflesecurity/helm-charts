@@ -4,8 +4,9 @@ kind: PriorityClass
 metadata:
   name: "trufflehog-enterprise"
   labels:
-    app.kubernetes.io/name: {{ include "trufflehog.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "trufflehog.labels" . | nindent 4 }}
+  annotations:
+    {{- include "trufflehog.annotations" . | nindent 4 }}
 value: {{ .Values.priorityClass.value }}
 description: "Priority class for Trufflehog Enterprise"
 {{- end }}
