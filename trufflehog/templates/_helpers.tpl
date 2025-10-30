@@ -81,3 +81,15 @@ Chart version
 {{- define "trufflehog.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Environment variables
+*/}}
+{{- define "trufflehog.envVars" -}}
+{{- if .Values.extraEnvVars }}
+{{- range .Values.extraEnvVars }}
+- name: {{ .name }}
+  value: {{ .value | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}
