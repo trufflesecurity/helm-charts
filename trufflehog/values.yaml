@@ -33,6 +33,46 @@ vpa:
 config:
   secretName: config
 
+# Persistence configuration for mounting storage volumes
+# Supports multiple volume types: PersistentVolumeClaim, emptyDir, hostPath, and custom volumes
+persistence:
+  # Enable persistence
+  enabled: false
+  # Mount path for the volume inside the container
+  mountPath: /data
+  # Volume type: "pvc" (PersistentVolumeClaim), "emptyDir", "hostPath", or "custom"
+  type: pvc
+  # Configuration for PersistentVolumeClaim
+  pvc:
+    # Use an existing PersistentVolumeClaim (if specified, storageClass and size are ignored)
+    existingClaim: ""
+    # Storage class for dynamically provisioning PVC (empty string uses default)
+    storageClass: ""
+    # Storage size for dynamically provisioned PVC
+    size: 10Gi
+    # Access mode for the PVC
+    accessMode: ReadWriteOnce
+    # Additional labels for the PVC
+    labels: {}
+    # Additional annotations for the PVC
+    annotations: {}
+  # Configuration for emptyDir volume
+  emptyDir: {}
+    # Uncomment to set size limit (requires SizeMemoryBackedVolumes feature gate)
+    # sizeLimit: 10Gi
+  # Configuration for hostPath volume
+  hostPath:
+    path: ""
+    type: ""
+  # Custom volume specification (raw YAML, will be merged with name)
+  # Use this for advanced volume types not covered above
+  # Example for nfs:
+  # custom:
+  #   nfs:
+  #     server: nfs.example.com
+  #     path: /exported/path
+  custom: {}
+
 # Configures the CLI options for the scanner.
 cli:
   debug: false

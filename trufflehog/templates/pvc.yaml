@@ -1,0 +1,30 @@
+{{- if and .Values.persistence.enabled (eq .Values.persistence.type "pvc") (not .Values.persistence.pvc.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "trufflehog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "trufflehog.labels" . | nindent 4 }}
+  {{- with .Values.persistence.pvc.labels }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  annotations:
+    {{- with .Values.persistence.pvc.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.pvc.accessMode }}
+  {{- if .Values.persistence.pvc.storageClass }}
+  {{- if (eq "-" .Values.persistence.pvc.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.persistence.pvc.storageClass | quote }}
+  {{- end }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.pvc.size | quote }}
+{{- end }}
+

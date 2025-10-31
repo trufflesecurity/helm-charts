@@ -112,3 +112,26 @@ Environment variables
 {{- end }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Persistence volume specification
+*/}}
+{{- define "trufflehog.persistence.volume" -}}
+{{- if eq .Values.persistence.type "pvc" }}
+persistentVolumeClaim:
+  claimName: {{ if .Values.persistence.pvc.existingClaim }}{{ .Values.persistence.pvc.existingClaim }}{{ else }}{{ include "trufflehog.fullname" . }}{{ end }}
+{{- else if eq .Values.persistence.type "emptyDir" }}
+emptyDir:
+{{- if .Values.persistence.emptyDir }}
+{{- toYaml .Values.persistence.emptyDir | nindent 2 }}
+{{- end }}
+{{- else if eq .Values.persistence.type "hostPath" }}
+hostPath:
+  path: {{ required "persistence.hostPath.path is required when persistence.type is hostPath" .Values.persistence.hostPath.path }}
+{{- if .Values.persistence.hostPath.type }}
+  type: {{ .Values.persistence.hostPath.type }}
+{{- end }}
+{{- else if eq .Values.persistence.type "custom" }}
+{{- toYaml .Values.persistence.custom | nindent 0 }}
+{{- end }}
+{{- end -}}

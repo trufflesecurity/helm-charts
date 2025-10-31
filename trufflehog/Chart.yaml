@@ -2,3 +2,5 @@ apiVersion: v2
 name: trufflehog
 description: A Helm chart for TruffleHog Enterprise
 version: 0.1.2
+maintainers:
+- name: "@j2fw"

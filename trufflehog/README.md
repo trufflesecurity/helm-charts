@@ -136,6 +136,110 @@ config:
 
 Specifies the name of the Kubernetes secret containing the application configuration (`config.yaml`).
 
+### Persistence
+
+Configure persistent storage for the TruffleHog scanner. Supports multiple volume types including PersistentVolumeClaim, emptyDir, hostPath, and custom volumes.
+
+```yaml
+persistence:
+  enabled: false
+  mountPath: /data
+  type: pvc  # Options: pvc, emptyDir, hostPath, custom
+  pvc:
+    existingClaim: ""        # Use existing PVC (if empty, creates new)
+    storageClass: ""         # Storage class for dynamic provisioning (empty = default)
+    size: 10Gi               # Size for dynamically provisioned PVC
+    accessMode: ReadWriteOnce
+    labels: {}
+    annotations: {}
+  emptyDir: {}
+  hostPath:
+    path: ""
+    type: ""
+  custom: {}
+```
+
+#### Using an Existing PersistentVolumeClaim
+
+To use an existing PersistentVolumeClaim:
+
+```yaml
+persistence:
+  enabled: true
+  type: pvc
+  mountPath: /data
+  pvc:
+    existingClaim: my-existing-pvc
+```
+
+#### Auto-provisioning a PersistentVolumeClaim
+
+To automatically create and use a new PersistentVolumeClaim:
+
+```yaml
+persistence:
+  enabled: true
+  type: pvc
+  mountPath: /data
+  pvc:
+    storageClass: fast-ssd
+    size: 50Gi
+    accessMode: ReadWriteOnce
+```
+
+#### Using emptyDir (Ephemeral Storage)
+
+For temporary storage that persists only for the pod's lifetime:
+
+```yaml
+persistence:
+  enabled: true
+  type: emptyDir
+  mountPath: /data
+```
+
+You can optionally set a size limit (requires SizeMemoryBackedVolumes feature gate):
+
+```yaml
+persistence:
+  enabled: true
+  type: emptyDir
+  mountPath: /data
+  emptyDir:
+    sizeLimit: 10Gi
+```
+
+#### Using hostPath
+
+To mount a directory from the host node:
+
+```yaml
+persistence:
+  enabled: true
+  type: hostPath
+  mountPath: /data
+  hostPath:
+    path: /mnt/data
+    type: Directory  # Options: Directory, DirectoryOrCreate, File, FileOrCreate
+```
+
+#### Using Custom Volumes
+
+For advanced use cases (NFS, CephFS, etc.):
+
+```yaml
+persistence:
+  enabled: true
+  type: custom
+  mountPath: /data
+  custom:
+    nfs:
+      server: nfs.example.com
+      path: /exported/path
+```
+
+Note: When using `custom` type, you must provide the complete volume specification.
+
 ### CLI Options
 
 ```yaml
