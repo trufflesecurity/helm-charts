@@ -40,6 +40,23 @@ cli:
   trace: false
   json: false
 
+# Extra environment variables to add to the container
+# Array of key-value pairs, e.g.:
+# extraEnvVars:
+#   - name: LOG_LEVEL
+#     value: "debug"
+#   - name: CUSTOM_VAR
+#     value: "custom-value"
+extraEnvVars: []
+
+# Name of a ConfigMap containing additional environment variables
+# The ConfigMap should contain key-value pairs that will be added as environment variables
+extraEnvVarsCM: ""
+
+# Name of a Secret containing additional environment variables
+# The Secret should contain key-value pairs that will be added as environment variables
+extraEnvVarsSecret: ""
+
 
 probe:
   initialDelaySeconds: 3

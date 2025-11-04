@@ -39,6 +39,21 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
           terminationMessagePolicy: FallbackToLogsOnError
+          {{- if .Values.extraEnvVars }}
+          env:
+            {{- include "trufflehog.envVars" . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.extraEnvVarsCM .Values.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ .Values.extraEnvVarsCM }}
+            {{- end }}
+            {{- if .Values.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ .Values.extraEnvVarsSecret }}
+            {{- end }}
+          {{- end }}
           command: ["/usr/local/bin/scanner", "scan", "--config=/secret/config.yaml", "--port=8080"]
           args:
             {{- if .Values.cli.debug }}
