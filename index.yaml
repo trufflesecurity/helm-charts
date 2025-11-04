@@ -2,7 +2,15 @@ apiVersion: v1
 entries:
   trufflehog:
   - apiVersion: v2
-    created: "2025-09-09T15:20:40.865559-07:00"
+    created: "2025-11-03T17:05:04.993149-08:00"
+    description: A Helm chart for TruffleHog Enterprise
+    digest: 43777418a179d61e03d8ee809c2cf147229555d34cd63073434954858db5e787
+    name: trufflehog
+    urls:
+    - https://trufflesecurity.github.io/helm-charts/trufflehog-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    created: "2025-11-03T17:05:04.992929-08:00"
     description: A Helm chart for TruffleHog Enterprise
     digest: 6ff4ea94fdf6fa05939a191838fc2ea31058c054c40c9adbd45cdea7f5ad9087
     name: trufflehog
@@ -10,7 +18,7 @@ entries:
     - https://trufflesecurity.github.io/helm-charts/trufflehog-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v2
-    created: "2025-09-09T15:20:40.865281-07:00"
+    created: "2025-11-03T17:05:04.992717-08:00"
     description: A Helm chart for TruffleHog Enterprise
     digest: f1d0aa0600cc4ab7cb2e99df27c11b708eb399fad6a2bda14c997cae7237e994
     name: trufflehog
@@ -18,11 +26,11 @@ entries:
     - https://trufflesecurity.github.io/helm-charts/trufflehog-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
-    created: "2025-09-09T15:20:40.864717-07:00"
+    created: "2025-11-03T17:05:04.99251-08:00"
     description: A Helm chart for trufflehog secrets scanning
     digest: f0b4b1896cf085bcd096bff5b15d6abc2ca482fd184e4ddc1221265b9eeadb34
     name: trufflehog
     urls:
     - https://trufflesecurity.github.io/helm-charts/trufflehog-0.1.0.tgz
     version: 0.1.0
-generated: "2025-09-09T15:20:40.864177-07:00"
+generated: "2025-11-03T17:05:04.992307-08:00"
