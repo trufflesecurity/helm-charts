@@ -41,12 +41,26 @@ cli:
   json: false
 
 # Extra environment variables to add to the container
-# Array of key-value pairs, e.g.:
+# Supports both direct values and valueFrom references to ConfigMaps and Secrets
+# Examples:
 # extraEnvVars:
+#   # Direct value
 #   - name: LOG_LEVEL
 #     value: "debug"
-#   - name: CUSTOM_VAR
-#     value: "custom-value"
+#   # From ConfigMap key
+#   - name: CONFIG_VALUE
+#     valueFrom:
+#       configMapKeyRef:
+#         name: my-configmap
+#         key: config-key
+#         optional: false  # Optional: whether the ConfigMap/key must exist
+#   # From Secret key
+#   - name: API_KEY
+#     valueFrom:
+#       secretKeyRef:
+#         name: my-secret
+#         key: api-key
+#         optional: false  # Optional: whether the Secret/key must exist
 extraEnvVars: []
 
 # Name of a ConfigMap containing additional environment variables

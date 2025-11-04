@@ -89,7 +89,26 @@ Environment variables
 {{- if .Values.extraEnvVars }}
 {{- range .Values.extraEnvVars }}
 - name: {{ .name }}
+{{- if .value }}
   value: {{ .value | quote }}
+{{- else if .valueFrom }}
+  valueFrom:
+{{- if .valueFrom.configMapKeyRef }}
+    configMapKeyRef:
+      name: {{ .valueFrom.configMapKeyRef.name }}
+      key: {{ .valueFrom.configMapKeyRef.key }}
+{{- if .valueFrom.configMapKeyRef.optional }}
+      optional: {{ .valueFrom.configMapKeyRef.optional }}
+{{- end }}
+{{- else if .valueFrom.secretKeyRef }}
+    secretKeyRef:
+      name: {{ .valueFrom.secretKeyRef.name }}
+      key: {{ .valueFrom.secretKeyRef.key }}
+{{- if .valueFrom.secretKeyRef.optional }}
+      optional: {{ .valueFrom.secretKeyRef.optional }}
+{{- end }}
+{{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end -}}
