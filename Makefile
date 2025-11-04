@@ -11,6 +11,7 @@ help: ## Display this help message
 CHART_SOURCES := $(shell find trufflehog)
 
 trufflehog-%.tgz: $(CHART_SOURCES) ## Package up the current chart, eg. `make trufflehog-0.2.0.tgz`
+	sed -i '' -e "s/^version:.*/version: $*/" trufflehog/Chart.yaml
 	helm package trufflehog
 
 .PHONY: index.yaml
