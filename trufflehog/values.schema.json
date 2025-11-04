@@ -341,6 +341,56 @@
       },
       "required": ["create", "value"]
     },
+    "tolerations": {
+      "type": "array",
+      "description": "Taint tolerations for the pod. Allows pods to be scheduled on nodes with matching taints",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Key of the taint to tolerate"
+          },
+          "operator": {
+            "type": "string",
+            "description": "Operator for the toleration",
+            "enum": ["Equal", "Exists"],
+            "default": "Equal"
+          },
+          "value": {
+            "type": "string",
+            "description": "Value of the taint to tolerate. Only used when operator is 'Equal'"
+          },
+          "effect": {
+            "type": "string",
+            "description": "Effect of the taint to tolerate",
+            "enum": ["NoSchedule", "PreferNoSchedule", "NoExecute"],
+            "default": "NoSchedule"
+          },
+          "tolerationSeconds": {
+            "type": "integer",
+            "description": "TolerationSeconds is the period of time the pod can remain bound to a node with a matching taint. Only used when effect is 'NoExecute'",
+            "minimum": 0
+          }
+        },
+        "required": ["key", "operator", "effect"],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "operator": {
+                  "const": "Equal"
+                }
+              }
+            },
+            "then": {
+              "required": ["value"]
+            }
+          }
+        ]
+      },
+      "default": []
+    },
     "securityContext": {
       "type": "object",
       "description": "Security context configuration",
