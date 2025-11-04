@@ -4,5 +4,5 @@ trufflehog-%.tgz: $(CHART_SOURCES)
 	helm package trufflehog
 
 .PHONY: index.yaml
-index.yaml: *.tgz
+index.yaml:
 	helm repo index . --url https://trufflesecurity.github.io/helm-charts/
