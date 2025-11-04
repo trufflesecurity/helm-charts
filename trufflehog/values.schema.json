@@ -1,0 +1,424 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TruffleHog Enterprise Helm Chart Values",
+  "description": "Schema for validating TruffleHog Enterprise Helm chart values",
+  "type": "object",
+  "properties": {
+    "replicaCount": {
+      "description": "Sets the number of pod replicas",
+      "type": "integer",
+      "minimum": 1,
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image configuration",
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository",
+          "default": "us-docker.pkg.dev/thog-artifacts/public/scanner"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag",
+          "default": "latest"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Image pull policy",
+          "enum": ["Always", "IfNotPresent", "Never"],
+          "default": "Always"
+        }
+      },
+      "required": ["repository", "tag"]
+    },
+    "resources": {
+      "type": "object",
+      "description": "The resources requests and limits for the TruffleHog Enterprise container",
+      "properties": {
+        "requests": {
+          "type": "object",
+          "properties": {
+            "memory": {
+              "type": "string",
+              "description": "Memory request",
+              "default": "16Gi"
+            },
+            "cpu": {
+              "type": "string",
+              "description": "CPU request",
+              "default": "4000m"
+            },
+            "ephemeralStorage": {
+              "type": "string",
+              "description": "Ephemeral storage request",
+              "default": "10Gi"
+            }
+          },
+          "required": ["memory", "cpu", "ephemeralStorage"]
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether to enable resource limits",
+              "default": true
+            },
+            "memory": {
+              "type": "string",
+              "description": "Memory limit",
+              "default": "48Gi"
+            },
+            "cpu": {
+              "type": "string",
+              "description": "CPU limit",
+              "default": "12000m"
+            },
+            "ephemeralStorage": {
+              "type": "string",
+              "description": "Ephemeral storage limit",
+              "default": "30Gi"
+            }
+          },
+          "required": ["enabled"]
+        }
+      },
+      "required": ["requests", "limits"]
+    },
+    "vpa": {
+      "type": "object",
+      "description": "A VerticalPodAutoscaler will adjust resource requests based on observed CPU and memory usage",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to enable VPA",
+          "default": true
+        },
+        "minAllowed": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "string",
+              "description": "Minimum allowed CPU",
+              "default": "4000m"
+            },
+            "memory": {
+              "type": "string",
+              "description": "Minimum allowed memory",
+              "default": "16Gi"
+            }
+          },
+          "required": ["cpu", "memory"]
+        },
+        "maxAllowed": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether to enable max allowed resources",
+              "default": true
+            },
+            "memory": {
+              "type": "string",
+              "description": "Maximum allowed memory",
+              "default": "48Gi"
+            },
+            "cpu": {
+              "type": "string",
+              "description": "Maximum allowed CPU",
+              "default": "12000m"
+            }
+          },
+          "required": ["enabled"]
+        }
+      },
+      "required": ["enabled", "minAllowed", "maxAllowed"]
+    },
+    "config": {
+      "type": "object",
+      "description": "Configures the Kubernetes secret that provides the application's configuration data",
+      "properties": {
+        "secretName": {
+          "type": "string",
+          "description": "Name of the secret containing configuration",
+          "default": "config"
+        }
+      },
+      "required": ["secretName"]
+    },
+    "cli": {
+      "type": "object",
+      "description": "Configures the CLI options for the scanner",
+      "properties": {
+        "debug": {
+          "type": "boolean",
+          "description": "Enable debug mode",
+          "default": false
+        },
+        "quiet": {
+          "type": "boolean",
+          "description": "Enable quiet mode",
+          "default": false
+        },
+        "trace": {
+          "type": "boolean",
+          "description": "Enable trace mode",
+          "default": false
+        },
+        "json": {
+          "type": "boolean",
+          "description": "Enable JSON output",
+          "default": false
+        }
+      },
+      "required": ["debug", "quiet", "trace", "json"]
+    },
+    "extraEnvVars": {
+      "type": "array",
+      "description": "Extra environment variables to add to the container. Supports both direct values and valueFrom references to ConfigMaps and Secrets",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Environment variable name"
+          },
+          "value": {
+            "type": "string",
+            "description": "Direct value for the environment variable"
+          },
+          "valueFrom": {
+            "type": "object",
+            "description": "Reference to a value from ConfigMap or Secret",
+            "properties": {
+              "configMapKeyRef": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the ConfigMap"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Key in the ConfigMap"
+                  },
+                  "optional": {
+                    "type": "boolean",
+                    "description": "Whether the ConfigMap/key must exist",
+                    "default": false
+                  }
+                },
+                "required": ["name", "key"]
+              },
+              "secretKeyRef": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the Secret"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Key in the Secret"
+                  },
+                  "optional": {
+                    "type": "boolean",
+                    "description": "Whether the Secret/key must exist",
+                    "default": false
+                  }
+                },
+                "required": ["name", "key"]
+              }
+            }
+          }
+        },
+        "required": ["name"],
+        "oneOf": [
+          {
+            "required": ["value"]
+          },
+          {
+            "required": ["valueFrom"]
+          }
+        ]
+      },
+      "default": []
+    },
+    "extraEnvVarsCM": {
+      "type": "string",
+      "description": "Name of a ConfigMap containing additional environment variables. The ConfigMap should contain key-value pairs that will be added as environment variables",
+      "default": ""
+    },
+    "extraEnvVarsSecret": {
+      "type": "string",
+      "description": "Name of a Secret containing additional environment variables. The Secret should contain key-value pairs that will be added as environment variables",
+      "default": ""
+    },
+    "probe": {
+      "type": "object",
+      "description": "Liveness probe configuration",
+      "properties": {
+        "initialDelaySeconds": {
+          "type": "integer",
+          "description": "Initial delay before starting probe",
+          "minimum": 0,
+          "default": 3
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "Period between probe checks",
+          "minimum": 1,
+          "default": 3
+        }
+      },
+      "required": ["initialDelaySeconds", "periodSeconds"]
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the name of the chart",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full name of the chart",
+      "default": ""
+    },
+    "commonLabels": {
+      "type": "object",
+      "description": "Common labels to add to all resources",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {}
+    },
+    "commonAnnotations": {
+      "type": "object",
+      "description": "Common annotations to add to all resources",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels to add to pods",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {}
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations to add to pods",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {}
+    },
+    "priorityClass": {
+      "type": "object",
+      "description": "Priority class configuration",
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Whether to create a PriorityClass",
+          "default": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Existing priority class to use if create is false",
+          "default": ""
+        },
+        "value": {
+          "type": "integer",
+          "description": "Priority value, only used if create is true",
+          "minimum": 0,
+          "maximum": 1000000000,
+          "default": 1000
+        }
+      },
+      "required": ["create", "value"]
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Security context configuration",
+      "properties": {
+        "pod": {
+          "type": "object",
+          "description": "Pod-level security context",
+          "properties": {
+            "runAsNonRoot": {
+              "type": "boolean",
+              "description": "Run as non-root user",
+              "default": true
+            },
+            "runAsUser": {
+              "type": "integer",
+              "description": "User ID to run as",
+              "minimum": 0,
+              "default": 1000
+            },
+            "runAsGroup": {
+              "type": "integer",
+              "description": "Group ID to run as",
+              "minimum": 0,
+              "default": 1000
+            },
+            "fsGroup": {
+              "type": "integer",
+              "description": "File system group ID",
+              "minimum": 0,
+              "default": 1000
+            }
+          },
+          "required": ["runAsNonRoot", "runAsUser", "runAsGroup", "fsGroup"]
+        },
+        "container": {
+          "type": "object",
+          "description": "Container-level security context",
+          "properties": {
+            "runAsNonRoot": {
+              "type": "boolean",
+              "description": "Run as non-root user",
+              "default": true
+            },
+            "runAsUser": {
+              "type": "integer",
+              "description": "User ID to run as",
+              "minimum": 0,
+              "default": 1000
+            },
+            "allowPrivilegeEscalation": {
+              "type": "boolean",
+              "description": "Allow privilege escalation",
+              "default": false
+            },
+            "capabilities": {
+              "type": "object",
+              "properties": {
+                "drop": {
+                  "type": "array",
+                  "description": "List of capabilities to drop",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "add": {
+                  "type": "array",
+                  "description": "List of capabilities to add",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": ["runAsNonRoot", "runAsUser", "allowPrivilegeEscalation"]
+        }
+      },
+      "required": ["pod", "container"]
+    }
+  }
+}
