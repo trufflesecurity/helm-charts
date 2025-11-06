@@ -31,6 +31,8 @@ spec:
       {{- if .Values.ca.enabled }}
       initContainers:
         - name: update-ca-certificates
+          securityContext:
+            {{- toYaml .Values.securityContext.container | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
           command: ["/bin/sh", "-c", "update-ca-certificates"]
