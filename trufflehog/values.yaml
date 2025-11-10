@@ -58,16 +58,19 @@ extraEnvVarsCM: ""
 extraEnvVarsSecret: ""
 
 # Certificate Authority configuration
-# Supports mounting certificates from a ConfigMap or Secret with keys ending in .crt
+# Supports mounting certificates from a ConfigMap, Secret, or PersistentVolumeClaim with files ending in .crt
 ca:
   # Enable custom CA support
   enabled: false
   # Name of ConfigMap containing CA certificates (keys ending in .crt)
-  # Mutually exclusive with secret
+  # Mutually exclusive with secret and persistentVolumeClaim
   configMap: ""
   # Name of Secret containing CA certificates (keys ending in .crt)
-  # Mutually exclusive with configMap
+  # Mutually exclusive with configMap and persistentVolumeClaim
   secret: ""
+  # Name of PersistentVolumeClaim containing CA certificates (files ending in .crt)
+  # Mutually exclusive with configMap and secret
+  persistentVolumeClaim: ""
 
 
 probe:

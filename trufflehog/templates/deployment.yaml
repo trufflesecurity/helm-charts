@@ -57,6 +57,9 @@ spec:
           {{- else if .Values.ca.secret }}
           secret:
             secretName: {{ .Values.ca.secret }}
+          {{- else if .Values.ca.persistentVolumeClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.ca.persistentVolumeClaim }}
           {{- end }}
         {{- end }}
       containers:
