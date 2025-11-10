@@ -45,10 +45,14 @@ custom:
   # Extra environment variables to add to the container
   # Array of key-value pairs, e.g.:
   # envVars:
-  #   - name: LOG_LEVEL
-  #     value: "debug"
   #   - name: CUSTOM_VAR
-  #     value: "custom-value"
+  #     value: "custom_value"
+  #   - name: ANOTHER_VAR
+  #     valueFrom:
+  #     configMapKeyRef:
+  #       name: my-special-configmap
+  #       key: some-configmap-key
+
   envVars: []
   # Name of a ConfigMap containing additional environment variables
   # The ConfigMap should contain key-value pairs that will be added as environment variables
