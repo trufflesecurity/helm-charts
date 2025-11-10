@@ -58,12 +58,16 @@ extraEnvVarsCM: ""
 extraEnvVarsSecret: ""
 
 # Certificate Authority configuration
-# Supports mounting certificates from a ConfigMap, Secret, or PersistentVolumeClaim with files ending in .crt
+# Supports mounting certificates from a ConfigMap, Secret, or
+# PersistentVolumeClaim with keys/files ending in .crt
 ca:
   # Enable custom CA support
   enabled: false
-  # Specify exactly one of [configMap, secret, persistentVolumeClaim] -- they are mutually exclusive here.
-  # Trusted certs should be files or keys that end with `.crt`.
+  # If custom CA is enabled, Specify exactly one of [configMap, secret,
+  # persistentVolumeClaim] -- they are mutually exclusive here. Trusted certs
+  # should be files (for pvc) or keys (for configMap or secret) that end with
+  # `.crt`. It is recommended to use a configMap or secret, because kubernetes
+  # cannot detect changes to PVC contents.
   configMap: ""
   secret: ""
   persistentVolumeClaim: ""
