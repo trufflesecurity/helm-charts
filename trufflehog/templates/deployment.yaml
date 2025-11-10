@@ -62,6 +62,9 @@ spec:
             claimName: {{ .Values.ca.persistentVolumeClaim }}
           {{- end }}
         {{- end }}
+        {{- if .Values.custom.volumes }}
+        {{- toYaml .Values.custom.volumes | nindent 8 }}
+        {{- end }}
       containers:
         - name: trufflehog
           securityContext:
@@ -69,19 +72,19 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
           terminationMessagePolicy: FallbackToLogsOnError
-          {{- if .Values.extraEnvVars }}
+          {{- if .Values.custom.envVars }}
           env:
             {{- include "trufflehog.envVars" . | nindent 12 }}
           {{- end }}
-          {{- if or .Values.extraEnvVarsCM .Values.extraEnvVarsSecret }}
+          {{- if or .Values.custom.envVarsCM .Values.custom.envVarsSecret }}
           envFrom:
-            {{- if .Values.extraEnvVarsCM }}
+            {{- if .Values.custom.envVarsCM }}
             - configMapRef:
-                name: {{ .Values.extraEnvVarsCM }}
+                name: {{ .Values.custom.envVarsCM }}
             {{- end }}
-            {{- if .Values.extraEnvVarsSecret }}
+            {{- if .Values.custom.envVarsSecret }}
             - secretRef:
-                name: {{ .Values.extraEnvVarsSecret }}
+                name: {{ .Values.custom.envVarsSecret }}
             {{- end }}
           {{- end }}
           command: ["/usr/local/bin/scanner", "scan", "--config=/secret/config.yaml", "--port=8080"]
@@ -105,6 +108,9 @@ spec:
             initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
             periodSeconds: {{ .Values.probe.periodSeconds }}
           volumeMounts:
+            {{- if .Values.custom.volumeMounts }}
+            {{- toYaml .Values.custom.volumeMounts | nindent 12 }}
+            {{- end }}
             - name: config-secret-volume
               mountPath: /secret/
             {{- if .Values.ca.enabled }}

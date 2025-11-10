@@ -40,22 +40,42 @@ cli:
   trace: false
   json: false
 
-# Extra environment variables to add to the container
-# Array of key-value pairs, e.g.:
-# extraEnvVars:
-#   - name: LOG_LEVEL
-#     value: "debug"
-#   - name: CUSTOM_VAR
-#     value: "custom-value"
-extraEnvVars: []
-
-# Name of a ConfigMap containing additional environment variables
-# The ConfigMap should contain key-value pairs that will be added as environment variables
-extraEnvVarsCM: ""
-
-# Name of a Secret containing additional environment variables
-# The Secret should contain key-value pairs that will be added as environment variables
-extraEnvVarsSecret: ""
+# Custom configurations for volumes, volume mounts, and environment variables
+custom:
+  # Extra environment variables to add to the container
+  # Array of key-value pairs, e.g.:
+  # envVars:
+  #   - name: LOG_LEVEL
+  #     value: "debug"
+  #   - name: CUSTOM_VAR
+  #     value: "custom-value"
+  envVars: []
+  # Name of a ConfigMap containing additional environment variables
+  # The ConfigMap should contain key-value pairs that will be added as environment variables
+  envVarsCM: ""
+  # Name of a Secret containing additional environment variables
+  # The Secret should contain key-value pairs that will be added as environment variables
+  envVarsSecret: ""
+  # Extra volumes to add to the pod
+  # Array of volume definitions, e.g.:
+  # volumes:
+  #   - name: my-data-pvc
+  #     persistentVolumeClaim:
+  #       claimName: existing-data-pvc
+  #   - name: my-config
+  #     configMap:
+  #       name: my-configmap
+  volumes: []
+  # Extra volume mounts to add to the container
+  # Array of volume mount definitions, e.g.:
+  # volumeMounts:
+  #   - name: my-data-pvc
+  #     mountPath: /data
+  #   - name: my-config
+  #     mountPath: /config
+  #     readOnly: true
+  # Note: These mounts will appear before CA configuration mounts in the final deployment.
+  volumeMounts: []
 
 # Certificate Authority configuration
 # Supports mounting certificates from a ConfigMap, Secret, or
