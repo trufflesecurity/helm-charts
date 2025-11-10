@@ -62,16 +62,11 @@ extraEnvVarsSecret: ""
 ca:
   # Enable custom CA support
   enabled: false
-  # Name of ConfigMap containing CA certificates (keys ending in .crt)
-  # Mutually exclusive with secret and persistentVolumeClaim
+  # Specify exactly one of [configMap, secret, persistentVolumeClaim] -- they are mutually exclusive here.
+  # Trusted certs should be files or keys that end with `.crt`.
   configMap: ""
-  # Name of Secret containing CA certificates (keys ending in .crt)
-  # Mutually exclusive with configMap and persistentVolumeClaim
   secret: ""
-  # Name of PersistentVolumeClaim containing CA certificates (files ending in .crt)
-  # Mutually exclusive with configMap and secret
   persistentVolumeClaim: ""
-
 
 probe:
   initialDelaySeconds: 3
@@ -105,8 +100,8 @@ podAnnotations: {}
 
 priorityClass:
   create: true
-  name: ""                # Existing priority class to use if create is false
-  value: 1000             # Priority value, only used if create is true
+  name: "" # Existing priority class to use if create is false
+  value: 1000 # Priority value, only used if create is true
 
 securityContext:
   # Pod-level security context
