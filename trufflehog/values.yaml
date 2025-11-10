@@ -62,19 +62,20 @@ custom:
   #   - name: my-data-pvc
   #     persistentVolumeClaim:
   #       claimName: existing-data-pvc
-  #   - name: my-config
+  #   - name: my-configmap
   #     configMap:
   #       name: my-configmap
+  # NOTE: the volume names [config-secret-volume, ca-certificates, custom-certs] are reserved for internal chart use
   volumes: []
   # Extra volume mounts to add to the container
   # Array of volume mount definitions, e.g.:
   # volumeMounts:
   #   - name: my-data-pvc
   #     mountPath: /data
-  #   - name: my-config
-  #     mountPath: /config
+  #   - name: my-configmap
+  #     mountPath: /my-configmap
   #     readOnly: true
-  # Note: These mounts will appear before CA configuration mounts in the final deployment.
+  # NOTE: These mounts will appear before trufflehog config and CA configuration mounts in the final deployment.
   volumeMounts: []
 
 # Certificate Authority configuration
