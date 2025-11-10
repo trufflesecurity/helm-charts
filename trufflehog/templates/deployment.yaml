@@ -26,6 +26,10 @@ spec:
       {{- else }}
       # no priority class, leave it up to the system
       {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.securityContext.pod | nindent 8 }}
       volumes:

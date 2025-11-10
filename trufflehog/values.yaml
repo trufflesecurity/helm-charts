@@ -147,6 +147,19 @@ priorityClass:
   name: ""                # Existing priority class to use if create is false
   value: 1000             # Priority value, only used if create is true
 
+# Taint tolerations for the pod
+# Allows pods to be scheduled on nodes with matching taints
+# Example:
+# tolerations:
+#   - key: "key"
+#     operator: "Equal"
+#     value: "value"
+#     effect: "NoSchedule"
+#   - key: "dedicated"
+#     operator: "Exists"
+#     effect: "NoSchedule"
+tolerations: []
+
 securityContext:
   # Pod-level security context
   pod:

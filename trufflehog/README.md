@@ -360,6 +360,29 @@ priorityClass:
 
 Configure pod priority. Set `create: false` and specify `name` to use an existing priority class.
 
+### Taint Tolerations
+
+```yaml
+tolerations: []
+```
+
+Configure taint tolerations to allow pods to be scheduled on nodes with matching taints. This is useful for scheduling pods on dedicated nodes or nodes with specific taints.
+
+Example:
+
+```yaml
+tolerations:
+  - key: "key"
+    operator: "Equal"
+    value: "value"
+    effect: "NoSchedule"
+  - key: "dedicated"
+    operator: "Exists"
+    effect: "NoSchedule"
+```
+
+For more information on tolerations, see the [Kubernetes documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
+
 ### Security Context
 
 ```yaml
