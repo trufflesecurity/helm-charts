@@ -28,10 +28,43 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.securityContext.pod | nindent 8 }}
+      {{- if .Values.ca.enabled }}
+      initContainers:
+        - name: update-ca-certificates
+          securityContext:
+            {{- toYaml .Values.securityContext.container | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
+          command: ["/bin/sh", "-c", "update-ca-certificates"]
+          volumeMounts:
+            - name: custom-certs
+              mountPath: /usr/local/share/ca-certificates
+              readOnly: true
+            - name: ca-certificates
+              mountPath: /etc/ssl/certs
+      {{- end }}
       volumes:
         - name: config-secret-volume
           secret:
             secretName: {{ .Values.config.secretName }}
+        {{- if .Values.ca.enabled }}
+        - name: ca-certificates
+          emptyDir: {}
+        - name: custom-certs
+          {{- if .Values.ca.configMap }}
+          configMap:
+            name: {{ .Values.ca.configMap }}
+          {{- else if .Values.ca.secret }}
+          secret:
+            secretName: {{ .Values.ca.secret }}
+          {{- else if .Values.ca.persistentVolumeClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.ca.persistentVolumeClaim }}
+          {{- end }}
+        {{- end }}
+        {{- if .Values.custom.volumes }}
+        {{- toYaml .Values.custom.volumes | nindent 8 }}
+        {{- end }}
       containers:
         - name: trufflehog
           securityContext:
@@ -39,19 +72,19 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
           terminationMessagePolicy: FallbackToLogsOnError
-          {{- if .Values.extraEnvVars }}
+          {{- if .Values.custom.envVars }}
           env:
             {{- include "trufflehog.envVars" . | nindent 12 }}
           {{- end }}
-          {{- if or .Values.extraEnvVarsCM .Values.extraEnvVarsSecret }}
+          {{- if or .Values.custom.envVarsCM .Values.custom.envVarsSecret }}
           envFrom:
-            {{- if .Values.extraEnvVarsCM }}
+            {{- if .Values.custom.envVarsCM }}
             - configMapRef:
-                name: {{ .Values.extraEnvVarsCM }}
+                name: {{ .Values.custom.envVarsCM }}
             {{- end }}
-            {{- if .Values.extraEnvVarsSecret }}
+            {{- if .Values.custom.envVarsSecret }}
             - secretRef:
-                name: {{ .Values.extraEnvVarsSecret }}
+                name: {{ .Values.custom.envVarsSecret }}
             {{- end }}
           {{- end }}
           command: ["/usr/local/bin/scanner", "scan", "--config=/secret/config.yaml", "--port=8080"]
@@ -75,8 +108,19 @@ spec:
             initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
             periodSeconds: {{ .Values.probe.periodSeconds }}
           volumeMounts:
+            {{- if .Values.custom.volumeMounts }}
+            {{- toYaml .Values.custom.volumeMounts | nindent 12 }}
+            {{- end }}
             - name: config-secret-volume
               mountPath: /secret/
+            {{- if .Values.ca.enabled }}
+            - name: custom-certs
+              mountPath: /usr/local/share/ca-certificates
+              readOnly: true
+            - name: ca-certificates
+              mountPath: /etc/ssl/certs
+              readOnly: true
+            {{- end }}
           resources:
             requests:
               memory: "{{ .Values.resources.requests.memory }}"

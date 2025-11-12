@@ -1,4 +1,4 @@
-# Sets the number of pod replicas.
+## Sets the number of pod replicas.
 replicaCount: 1
 
 image:
@@ -6,7 +6,7 @@ image:
   tag: latest
   pullPolicy: Always
 
-# The resources requests and limits for the TruffleHog Enterprise container.
+## The resources requests and limits for the TruffleHog Enterprise container.
 resources:
   requests:
     memory: "16Gi"
@@ -18,7 +18,7 @@ resources:
     cpu: "12000m"
     ephemeralStorage: "30Gi"
 
-# A VerticalPodAutoscaler will adjust resource requests based on observed CPU and memory usage.
+## A VerticalPodAutoscaler will adjust resource requests based on observed CPU and memory usage.
 vpa:
   enabled: true
   minAllowed:
@@ -29,34 +29,76 @@ vpa:
     memory: "48Gi"
     cpu: "12000m"
 
-# Configures the Kubernetes secret that provides the application's configuration data.
+## Configures the Kubernetes secret that provides the application's configuration data.
 config:
   secretName: config
 
-# Configures the CLI options for the scanner.
+## Configures the CLI options for the scanner.
 cli:
   debug: false
   quiet: false
   trace: false
   json: false
 
-# Extra environment variables to add to the container
-# Array of key-value pairs, e.g.:
-# extraEnvVars:
-#   - name: LOG_LEVEL
-#     value: "debug"
-#   - name: CUSTOM_VAR
-#     value: "custom-value"
-extraEnvVars: []
+## Custom configurations for volumes, volume mounts, and environment variables
+custom:
+  ## Extra environment variables to add to the container
+  ## Array of key-value pairs, e.g.:
+  ## envVars:
+  ##   - name: CUSTOM_VAR
+  ##     value: "custom_value"
+  ##   - name: ANOTHER_VAR
+  ##     valueFrom:
+  ##     configMapKeyRef:
+  ##       name: my-special-configmap
+  ##       key: some-configmap-key
+  envVars: []
 
-# Name of a ConfigMap containing additional environment variables
-# The ConfigMap should contain key-value pairs that will be added as environment variables
-extraEnvVarsCM: ""
+  ## Name of a ConfigMap containing additional environment variables
+  ## The ConfigMap should contain key-value pairs that will be added as environment variables
+  envVarsCM: ""
 
-# Name of a Secret containing additional environment variables
-# The Secret should contain key-value pairs that will be added as environment variables
-extraEnvVarsSecret: ""
+  ## Name of a Secret containing additional environment variables
+  ## The Secret should contain key-value pairs that will be added as environment variables
+  envVarsSecret: ""
 
+  ## Extra volumes to add to the pod
+  ## Array of volume definitions, e.g.:
+  ## volumes:
+  ##   - name: my-data-pvc
+  ##     persistentVolumeClaim:
+  ##       claimName: existing-data-pvc
+  ##   - name: my-configmap
+  ##     configMap:
+  ##       name: my-configmap
+  ## The volume names [config-secret-volume, ca-certificates, custom-certs] are reserved for internal chart use
+  volumes: []
+
+  ## Extra volume mounts to add to the container
+  ## Array of volume mount definitions, e.g.:
+  ## volumeMounts:
+  ##   - name: my-data-pvc
+  ##     mountPath: /data
+  ##   - name: my-configmap
+  ##     mountPath: /my-configmap
+  ##     readOnly: true
+  ## These mounts will appear before trufflehog config and CA configuration mounts in the final deployment.
+  volumeMounts: []
+
+## Certificate Authority configuration
+## Supports mounting certificates from a ConfigMap, Secret, or
+## PersistentVolumeClaim with keys/files ending in .crt
+ca:
+  ## Enable custom CA support
+  enabled: false
+  ## If custom CA is enabled, Specify exactly one of [configMap, secret,
+  ## persistentVolumeClaim] -- they are mutually exclusive here. Trusted certs
+  ## should be files (for pvc) or keys (for configMap or secret) that end with
+  ## `.crt`. It is recommended to use a configMap or secret, because kubernetes
+  ## cannot detect changes to PVC contents.
+  configMap: ""
+  secret: ""
+  persistentVolumeClaim: ""
 
 probe:
   initialDelaySeconds: 3
@@ -65,22 +107,22 @@ probe:
 nameOverride: ""
 fullnameOverride: ""
 
-# Common labels to add to all resources
+## Common labels to add to all resources
 commonLabels: {}
   # environment: production
   # team: security
 
-# Common annotations to add to all resources
+## Common annotations to add to all resources
 commonAnnotations: {}
   # prometheus.io/scrape: "true"
   # prometheus.io/port: "8080"
 
-# Additional labels to add to pods
+## Additional labels to add to pods
 podLabels: {}
   # security-scan: enabled
   # pod-type: scanner
 
-# Additional annotations to add to pods
+## Additional annotations to add to pods
 podAnnotations: {}
   # prometheus.io/scrape: "true"
   # prometheus.io/port: "8080"
@@ -90,17 +132,17 @@ podAnnotations: {}
 
 priorityClass:
   create: true
-  name: ""                # Existing priority class to use if create is false
-  value: 1000             # Priority value, only used if create is true
+  name: "" ## Existing priority class to use if create is false
+  value: 1000 ## Priority value, only used if create is true
 
 securityContext:
-  # Pod-level security context
+  ## Pod-level security context
   pod:
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
     fsGroup: 1000
-  # Container-level security context
+  ## Container-level security context
   container:
     runAsNonRoot: true
     runAsUser: 1000

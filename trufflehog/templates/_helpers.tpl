@@ -86,8 +86,8 @@ Chart version
 Environment variables
 */}}
 {{- define "trufflehog.envVars" -}}
-{{- if .Values.extraEnvVars }}
-{{- range .Values.extraEnvVars }}
+{{- if .Values.custom.envVars }}
+{{- range .Values.custom.envVars }}
 - name: {{ .name }}
   value: {{ .value | quote }}
 {{- end }}
