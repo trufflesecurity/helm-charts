@@ -1,0 +1,555 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "TruffleHog Enterprise Helm Chart Values",
+  "description": "Schema for TruffleHog Enterprise Helm chart values",
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Sets the number of pod replicas",
+      "default": 1,
+      "minimum": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image configuration",
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository",
+          "default": "us-docker.pkg.dev/thog-artifacts/public/scanner"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag",
+          "default": "latest"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Image pull policy",
+          "enum": ["Always", "IfNotPresent", "Never"],
+          "default": "Always"
+        }
+      },
+      "required": ["repository", "tag"]
+    },
+    "resources": {
+      "type": "object",
+      "description": "The resources requests and limits for the TruffleHog Enterprise container",
+      "properties": {
+        "requests": {
+          "type": "object",
+          "properties": {
+            "memory": {
+              "type": "string",
+              "description": "Memory request",
+              "default": "16Gi"
+            },
+            "cpu": {
+              "type": "string",
+              "description": "CPU request",
+              "default": "4000m"
+            },
+            "ephemeralStorage": {
+              "type": "string",
+              "description": "Ephemeral storage request",
+              "default": "10Gi"
+            }
+          },
+          "required": ["memory", "cpu", "ephemeralStorage"]
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable resource limits",
+              "default": true
+            },
+            "memory": {
+              "type": "string",
+              "description": "Memory limit",
+              "default": "48Gi"
+            },
+            "cpu": {
+              "type": "string",
+              "description": "CPU limit",
+              "default": "12000m"
+            },
+            "ephemeralStorage": {
+              "type": "string",
+              "description": "Ephemeral storage limit",
+              "default": "30Gi"
+            }
+          },
+          "required": ["enabled"],
+          "if": {
+            "properties": {
+              "enabled": {"const": true}
+            }
+          },
+          "then": {
+            "anyOf": [
+              {"required": ["cpu"]},
+              {"required": ["memory"]},
+              {"required": ["ephemeralStorage"]}
+            ]
+          }
+        }
+      },
+      "required": ["requests", "limits"]
+    },
+    "vpa": {
+      "type": "object",
+      "description": "A VerticalPodAutoscaler will adjust resource requests based on observed CPU and memory usage",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable VerticalPodAutoscaler",
+          "default": true
+        },
+        "minAllowed": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "string",
+              "description": "Minimum allowed CPU",
+              "default": "4000m"
+            },
+            "memory": {
+              "type": "string",
+              "description": "Minimum allowed memory",
+              "default": "16Gi"
+            }
+          },
+          "required": ["cpu", "memory"]
+        },
+        "maxAllowed": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable maximum allowed resources",
+              "default": true
+            },
+            "memory": {
+              "type": "string",
+              "description": "Maximum allowed memory",
+              "default": "48Gi"
+            },
+            "cpu": {
+              "type": "string",
+              "description": "Maximum allowed CPU",
+              "default": "12000m"
+            }
+          },
+          "required": ["enabled"]
+        }
+      },
+      "required": ["enabled", "minAllowed", "maxAllowed"]
+    },
+    "config": {
+      "type": "object",
+      "description": "Configures the Kubernetes secret that provides the application's configuration data",
+      "properties": {
+        "secretName": {
+          "type": "string",
+          "description": "Name of the secret containing configuration",
+          "default": "config"
+        }
+      },
+      "required": ["secretName"]
+    },
+    "cli": {
+      "type": "object",
+      "description": "Configures the CLI options for the scanner",
+      "properties": {
+        "debug": {
+          "type": "boolean",
+          "description": "Enable debug mode",
+          "default": false
+        },
+        "quiet": {
+          "type": "boolean",
+          "description": "Enable quiet mode",
+          "default": false
+        },
+        "trace": {
+          "type": "boolean",
+          "description": "Enable trace mode",
+          "default": false
+        },
+        "json": {
+          "type": "boolean",
+          "description": "Enable JSON output",
+          "default": false
+        }
+      },
+      "required": ["debug", "quiet", "trace", "json"]
+    },
+    "custom": {
+      "type": "object",
+      "description": "Custom configurations for volumes, volume mounts, and environment variables",
+      "properties": {
+        "envVars": {
+          "type": "array",
+          "description": "Extra environment variables to add to the container",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueFrom": {
+                "type": "object",
+                "oneOf": [
+                  {
+                    "properties": {
+                      "configMapKeyRef": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "key": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["name", "key"],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": ["configMapKeyRef"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "properties": {
+                      "secretKeyRef": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "key": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["name", "key"],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": ["secretKeyRef"],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": ["name"],
+            "oneOf": [
+              {
+                "required": ["value"],
+                "not": {
+                  "required": ["valueFrom"]
+                }
+              },
+              {
+                "required": ["valueFrom"],
+                "not": {
+                  "required": ["value"]
+                }
+              }
+            ],
+            "additionalProperties": false
+          },
+          "default": []
+        },
+        "envVarsCM": {
+          "type": "string",
+          "description": "Name of a ConfigMap containing additional environment variables",
+          "default": ""
+        },
+        "envVarsSecret": {
+          "type": "string",
+          "description": "Name of a Secret containing additional environment variables",
+          "default": ""
+        },
+        "volumes": {
+          "type": "array",
+          "description": "Extra volumes to add to the pod. NOTE: the volume names [config-secret-volume, ca-certificates, custom-certs] are reserved for internal chart use",
+          "items": {
+            "type": "object"
+          },
+          "default": []
+        },
+        "volumeMounts": {
+          "type": "array",
+          "description": "Extra volume mounts to add to the container. NOTE: These mounts will appear before trufflehog config and CA configuration mounts in the final deployment.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "mountPath": {
+                "type": "string"
+              },
+              "readOnly": {
+                "type": "boolean"
+              }
+            },
+            "required": ["name", "mountPath"]
+          },
+          "default": []
+        }
+      }
+    },
+    "ca": {
+      "type": "object",
+      "description": "Certificate Authority configuration. Supports mounting certificates from a ConfigMap, Secret, or PersistentVolumeClaim with keys/files ending in .crt",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable custom CA support",
+          "default": false
+        },
+        "configMap": {
+          "type": "string",
+          "description": "Name of ConfigMap containing CA certificates (mutually exclusive with secret and persistentVolumeClaim)",
+          "default": ""
+        },
+        "secret": {
+          "type": "string",
+          "description": "Name of Secret containing CA certificates (mutually exclusive with configMap and persistentVolumeClaim)",
+          "default": ""
+        },
+        "persistentVolumeClaim": {
+          "type": "string",
+          "description": "Name of PersistentVolumeClaim containing CA certificates (mutually exclusive with configMap and secret)",
+          "default": ""
+        }
+      },
+      "required": ["enabled"],
+      "if": {
+        "properties": {
+          "enabled": {"const": true}
+        }
+      },
+      "then": {
+        "oneOf": [
+          {
+            "required": ["configMap"],
+            "properties": {
+              "configMap": {"type": "string", "minLength": 1}
+            },
+            "not": {
+              "anyOf": [
+                {"properties": {"secret": {"type": "string", "minLength": 1}}},
+                {"properties": {"persistentVolumeClaim": {"type": "string", "minLength": 1}}}
+              ]
+            }
+          },
+          {
+            "required": ["secret"],
+            "properties": {
+              "secret": {"type": "string", "minLength": 1}
+            },
+            "not": {
+              "anyOf": [
+                {"properties": {"configMap": {"type": "string", "minLength": 1}}},
+                {"properties": {"persistentVolumeClaim": {"type": "string", "minLength": 1}}}
+              ]
+            }
+          },
+          {
+            "required": ["persistentVolumeClaim"],
+            "properties": {
+              "persistentVolumeClaim": {"type": "string", "minLength": 1}
+            },
+            "not": {
+              "anyOf": [
+                {"properties": {"configMap": {"type": "string", "minLength": 1}}},
+                {"properties": {"secret": {"type": "string", "minLength": 1}}}
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "probe": {
+      "type": "object",
+      "description": "Liveness probe configuration",
+      "properties": {
+        "initialDelaySeconds": {
+          "type": "integer",
+          "description": "Initial delay before the first probe",
+          "default": 3,
+          "minimum": 0
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "Period between probe executions",
+          "default": 3,
+          "minimum": 1
+        }
+      },
+      "required": ["initialDelaySeconds", "periodSeconds"]
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the name of the chart",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full name of the chart",
+      "default": ""
+    },
+    "commonLabels": {
+      "type": "object",
+      "description": "Common labels to add to all resources",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {}
+    },
+    "commonAnnotations": {
+      "type": "object",
+      "description": "Common annotations to add to all resources",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels to add to pods",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {}
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations to add to pods",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {}
+    },
+    "priorityClass": {
+      "type": "object",
+      "description": "Priority class configuration",
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Create a priority class",
+          "default": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Existing priority class to use if create is false",
+          "default": ""
+        },
+        "value": {
+          "type": "integer",
+          "description": "Priority value, only used if create is true",
+          "default": 1000
+        }
+      },
+      "required": ["create"],
+      "if": {
+        "properties": {
+          "create": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["name"]
+      },
+      "else": {
+        "properties": {
+          "value": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Security context configuration",
+      "properties": {
+        "pod": {
+          "type": "object",
+          "description": "Pod-level security context",
+          "properties": {
+            "runAsNonRoot": {
+              "type": "boolean",
+              "default": true
+            },
+            "runAsUser": {
+              "type": "integer",
+              "default": 1000
+            },
+            "runAsGroup": {
+              "type": "integer",
+              "default": 1000
+            },
+            "fsGroup": {
+              "type": "integer",
+              "default": 1000
+            }
+          },
+          "required": ["runAsNonRoot", "runAsUser", "runAsGroup", "fsGroup"]
+        },
+        "container": {
+          "type": "object",
+          "description": "Container-level security context",
+          "properties": {
+            "runAsNonRoot": {
+              "type": "boolean",
+              "default": true
+            },
+            "runAsUser": {
+              "type": "integer",
+              "default": 1000
+            },
+            "allowPrivilegeEscalation": {
+              "type": "boolean",
+              "default": false
+            },
+            "capabilities": {
+              "type": "object",
+              "properties": {
+                "drop": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "add": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": ["runAsNonRoot", "runAsUser", "allowPrivilegeEscalation", "capabilities"]
+        }
+      },
+      "required": ["pod", "container"]
+    }
+  }
+}
+
