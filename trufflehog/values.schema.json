@@ -463,25 +463,12 @@
       "if": {
         "properties": {
           "create": {
-            "const": false
+            "const": true
           }
         }
       },
       "then": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "required": ["name"]
-      },
-      "else": {
-        "properties": {
-          "value": {
-            "type": "integer"
-          }
-        }
+        "required": ["name", "value"]
       }
     },
     "securityContext": {
