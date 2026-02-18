@@ -468,7 +468,10 @@
         }
       },
       "then": {
-        "required": ["name", "value"]
+        "required": ["value"]
+      },
+      "else": {
+        "required": ["name"]
       }
     },
     "securityContext": {
