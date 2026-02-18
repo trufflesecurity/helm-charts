@@ -2,7 +2,15 @@ apiVersion: v1
 entries:
   trufflehog:
   - apiVersion: v2
-    created: "2025-11-12T14:27:29.45784-08:00"
+    created: "2026-02-18T14:28:31.599814-08:00"
+    description: A Helm chart for TruffleHog Enterprise
+    digest: 7e87b56cd283f72890a58931437d1a7c0a13feb5687bc89015353494afcac03d
+    name: trufflehog
+    urls:
+    - https://trufflesecurity.github.io/helm-charts/trufflehog-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    created: "2026-02-18T14:28:31.599539-08:00"
     description: A Helm chart for TruffleHog Enterprise
     digest: 188464b28805dc41dd1c9e9c87a689bb81e749c7b663390261ff59edcef44836
     name: trufflehog
@@ -10,7 +18,7 @@ entries:
     - https://trufflesecurity.github.io/helm-charts/trufflehog-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v2
-    created: "2025-11-12T14:27:29.457572-08:00"
+    created: "2026-02-18T14:28:31.599128-08:00"
     description: A Helm chart for TruffleHog Enterprise
     digest: 6ff4ea94fdf6fa05939a191838fc2ea31058c054c40c9adbd45cdea7f5ad9087
     name: trufflehog
@@ -18,7 +26,7 @@ entries:
     - https://trufflesecurity.github.io/helm-charts/trufflehog-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v2
-    created: "2025-11-12T14:27:29.456917-08:00"
+    created: "2026-02-18T14:28:31.598737-08:00"
     description: A Helm chart for TruffleHog Enterprise
     digest: f1d0aa0600cc4ab7cb2e99df27c11b708eb399fad6a2bda14c997cae7237e994
     name: trufflehog
@@ -26,11 +34,11 @@ entries:
     - https://trufflesecurity.github.io/helm-charts/trufflehog-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
-    created: "2025-11-12T14:27:29.456552-08:00"
+    created: "2026-02-18T14:28:31.597974-08:00"
     description: A Helm chart for trufflehog secrets scanning
     digest: f0b4b1896cf085bcd096bff5b15d6abc2ca482fd184e4ddc1221265b9eeadb34
     name: trufflehog
     urls:
     - https://trufflesecurity.github.io/helm-charts/trufflehog-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-12T14:27:29.455946-08:00"
+generated: "2026-02-18T14:28:31.597288-08:00"
