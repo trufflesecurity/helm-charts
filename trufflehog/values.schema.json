@@ -471,6 +471,11 @@
         "required": ["value"]
       },
       "else": {
+        "properties": {
+          "name": {
+            "minLength": 1
+          }
+        },
         "required": ["name"]
       }
     },
