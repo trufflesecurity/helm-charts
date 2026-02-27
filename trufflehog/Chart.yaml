@@ -1,4 +1,0 @@
-apiVersion: v2
-name: trufflehog
-description: A Helm chart for TruffleHog Enterprise
-version: 0.3.0
