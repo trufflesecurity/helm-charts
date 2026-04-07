@@ -1,6 +1,15 @@
 ## Sets the number of pod replicas.
 replicaCount: 1
 
+## Deployment update strategy configuration.
+## type: RollingUpdate or Recreate
+## rollingUpdate: only used when type is RollingUpdate
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: "25%"
+    maxUnavailable: "25%"
+
 image:
   repository: us-docker.pkg.dev/thog-artifacts/public/scanner
   tag: latest
