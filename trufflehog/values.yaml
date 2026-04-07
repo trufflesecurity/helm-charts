@@ -1,9 +1,9 @@
 ## Sets the number of pod replicas.
 replicaCount: 1
 
-## Deployment update strategy configuration.
-## type: RollingUpdate or Recreate
-## rollingUpdate: only used when type is RollingUpdate
+## Controls how pods are replaced during upgrades.
+## RollingUpdate: gradually replaces pods, keeping the service available.
+## Recreate: terminates all existing pods before creating new ones (causes downtime).
 strategy:
   type: RollingUpdate
   rollingUpdate:
