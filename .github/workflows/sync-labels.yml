@@ -10,4 +10,4 @@ permissions:
 
 jobs:
   sync:
-    uses: trufflesecurity/.github-private/.github/workflows/label-sync-reusable.yml@main
+    uses: trufflesecurity/.github/.github/workflows/label-sync-reusable.yml@main
