@@ -1,0 +1,13 @@
+name: Sync Labels
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  sync:
+    uses: trufflesecurity/.github-private/.github/workflows/label-sync-reusable.yml@main
