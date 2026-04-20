@@ -1,0 +1,14 @@
+name: Stale PRs
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  stale:
+    uses: trufflesecurity/.github/.github/workflows/stale-reusable.yml@main
