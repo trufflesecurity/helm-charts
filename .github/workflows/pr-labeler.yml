@@ -1,0 +1,31 @@
+name: PR Labels
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number, "all" for full backfill, or empty for no-op'
+        default: ''
+      dry_run:
+        description: 'Log labels without applying'
+        type: boolean
+        default: false
+
+permissions:
+  pull-requests: write
+
+concurrency:
+  group: pr-labeler-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  label:
+    uses: trufflesecurity/.github/.github/workflows/pr-labeler-reusable.yml@main
+    with:
+      pr_number: ${{ inputs.pr_number || '' }}
+      # workflow_dispatch boolean inputs can arrive as strings (actions/runner#3571).
+      # Compare both shapes so 'false' is treated as the boolean false, not as a
+      # truthy string by the `|| false` short-circuit pattern.
+      dry_run: ${{ inputs.dry_run == true || inputs.dry_run == 'true' }}
