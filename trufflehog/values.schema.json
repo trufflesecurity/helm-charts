@@ -10,6 +10,35 @@
       "default": 1,
       "minimum": 1
     },
+    "strategy": {
+      "type": "object",
+      "description": "Deployment update strategy configuration",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Deployment strategy type",
+          "enum": ["RollingUpdate", "Recreate"],
+          "default": "RollingUpdate"
+        },
+        "rollingUpdate": {
+          "type": "object",
+          "description": "Rolling update configuration, only used when type is RollingUpdate",
+          "properties": {
+            "maxSurge": {
+              "type": ["string", "integer"],
+              "description": "Maximum number of pods that can be created over the desired number of pods (absolute number or percentage)",
+              "default": "25%"
+            },
+            "maxUnavailable": {
+              "type": ["string", "integer"],
+              "description": "Maximum number of pods that can be unavailable during the update (absolute number or percentage)",
+              "default": "25%"
+            }
+          }
+        }
+      },
+      "required": ["type"]
+    },
     "image": {
       "type": "object",
       "description": "Container image configuration",
