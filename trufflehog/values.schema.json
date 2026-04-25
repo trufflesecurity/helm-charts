@@ -422,9 +422,15 @@
           "description": "Period between probe executions",
           "default": 3,
           "minimum": 1
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "description": "Timeout for each probe attempt",
+          "default": 1,
+          "minimum": 1
         }
       },
-      "required": ["initialDelaySeconds", "periodSeconds"]
+      "required": ["initialDelaySeconds", "periodSeconds", "timeoutSeconds"]
     },
     "nameOverride": {
       "type": "string",
