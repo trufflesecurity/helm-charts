@@ -1,6 +1,15 @@
 ## Sets the number of pod replicas.
 replicaCount: 1
 
+## Controls how pods are replaced during upgrades.
+## RollingUpdate: gradually replaces pods, keeping the service available.
+## Recreate: terminates all existing pods before creating new ones (causes downtime).
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: "25%"
+    maxUnavailable: "25%"
+
 image:
   repository: us-docker.pkg.dev/thog-artifacts/public/scanner
   tag: latest
