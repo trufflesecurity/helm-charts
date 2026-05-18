@@ -115,6 +115,7 @@ spec:
               port: 8080
             initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
             periodSeconds: {{ .Values.probe.periodSeconds }}
+            timeoutSeconds: {{ .Values.probe.timeoutSeconds }}
           volumeMounts:
             {{- if .Values.custom.volumeMounts }}
             {{- toYaml .Values.custom.volumeMounts | nindent 12 }}

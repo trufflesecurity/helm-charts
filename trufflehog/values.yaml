@@ -112,6 +112,7 @@ ca:
 probe:
   initialDelaySeconds: 3
   periodSeconds: 3
+  timeoutSeconds: 1
 
 nameOverride: ""
 fullnameOverride: ""
