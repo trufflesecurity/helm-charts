@@ -17,9 +17,12 @@ permissions:
   contents: read
   pull-requests: write
 
-concurrency:
-  group: pr-labeler-${{ github.event.pull_request.number || github.run_id }}
-  cancel-in-progress: true
+# No concurrency group. Cancelling a run leaves a `cancelled` check run on the
+# head commit permanently, and Renovate reads every check run without discarding
+# superseded ones (renovatebot/renovate#36837), so it computes a red branch
+# status and silently refuses to automerge. The "latest run wins" ordering that
+# cancellation provided now lives in pr_labeler.py, which stands down when the
+# PR's body or head sha moved under it -- same ordering, no red check left behind.
 
 jobs:
   label:
